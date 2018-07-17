@@ -3,97 +3,74 @@ var {By, until, Key} = require('selenium-webdriver');
 var url = require('url');
 var assert = require('assert');
 
-Given(/^I have opened the Ebay site in "([^"]*)"$/, {timeout: 200 * 1000}, function(browser, callback) {
+Given(/^I have opened the Ebay site in "([^"]*)"$/, {timeout: 200 * 1000}, async function(browser) {
 
     if (browser == 'IE') {
         this.driver = this.ie;
     } else {
         this.driver = this.chrome;
     }
-    this.driver.get('https://www.ebay.com.au/').then( () => {
-       callback();
-    });
+    await this.driver.get('https://www.ebay.com.au/');
 });
 
-When(/^I can search Ebay for a product "([^"]*)"$/, {timeout: 100 * 1000}, function(searchQuery, callback) {
-    this.driver.findElement(By.id('gh-ac')).sendKeys(searchQuery, Key.ENTER);
-    this.driver.wait(until.titleIs(searchQuery + " | eBay"), 1000);
-    callback();
+When(/^I can search Ebay for a product "([^"]*)"$/, {timeout: 100 * 1000}, async function(searchQuery) {
+    var query = await this.driver.wait(until.elementLocated(By.id('gh-ac')));
+    await query.sendKeys(searchQuery, Key.ENTER);
+    await this.driver.wait(until.titleIs(searchQuery + " | eBay"), 5000);
 });
 
 
-Then(/^I can select a random product from the list$/, function (callback) {
-    var world = this;
+Then(/^I can select a random product from the list$/, async function () {
 
-    this.driver.findElements(By.className("s-item__link")).then(function(elements) {
-
-        var rnd = Math.floor(Math.random() * (elements.length - 1));
-
-        elements[rnd].click().then(function() { callback(); });
-    });
-
+    var elements = await this.driver.findElements(By.className("s-item__link"));
+    var rnd = Math.floor(Math.random() * (elements.length - 1));
+    await elements[rnd].click();
+    await this.driver.wait(until.titleContains('| eBay'));
 });
 
-Then(/^I can add the selected product to a shopping cart$/, function (callback) {
+Then(/^I can add the selected product to a shopping cart$/, async function () {
     // console.log("Add Product to a shopping cart");
 
-    var world = this;
-    const element = By.id("atcRedesignId_btn");
-    this.driver.wait(until.elementLocated(element));
-    const whatElement = this.driver.findElement(element);
+    // Get the item for comparison with the final value
+    var urlValue = await this.driver.getCurrentUrl();
+    var q = url.parse(urlValue, true);
+    var itemValue = q.pathname.split('/');
+    this.itemList.push(itemValue[3]);
 
-    this.driver.wait(until.elementIsVisible(whatElement), 8000).then(function(elem){
-        world.driver.getCurrentUrl().then(function(urlValue) {
-            var q = url.parse(urlValue, true);
-            var itemValue = q.pathname.split('/');
-            world.itemList.push(itemValue[3]);
-        });
+    // Find the Add to Cart Button
+    const element = By.id('atcRedesignId_btn');
+    await this.driver.wait(until.elementLocated(element), 8000);
 
-        world.driver.findElement(element).click();
-        callback();
-    });
+    // Click on the Add to Cart Button
+    var button = await this.driver.findElement(element);
+    await button.click();
 });
 
-Then(/^product has been added to the cart and go back to search$/, {timeout: 60 * 1000}, function (callback) {
+Then(/^product has been added to the cart and go back to search$/, {timeout: 60 * 1000}, async function () {
     // console.log("Product has been added to the cart");
-
-    var world = this;
-
-    var closeButton = this.driver.wait(until.elementLocated(By.className('clzBtn')));
-
-    closeButton.click();
-    callback();
+    const element = By.className('clzBtn');
+    await this.driver.wait(until.elementLocated(element));
+    var button = await this.driver.findElement(element);
+    await button.click();
 });
 
-Then(/^product has been added to the cart and go to checkout$/, {timeout: 60 * 1000}, function (callback) {
-    var world = this;
+Then(/^product has been added to the cart and go to checkout$/, {timeout: 60 * 1000}, async function () {
     const element = By.xpath("//a[contains(@class, 'btn btn-scnd vi-VR-btnWdth-XL')]");
-    this.driver.wait(until.elementLocated(element)).then(() => {
-        world.driver.findElement(element).click();
-
-        callback();
-    });
+    await this.driver.wait(until.elementLocated(element));
+    var button = await this.driver.findElement(element);
+    await button.click();
 });
 
-Then(/^validate the added products are on the cart$/, function (callback) {
+Then(/^validate the added products are on the cart$/, async function () {
+    await this.driver.wait(until.titleIs('Your eBay Shopping Cart'), 1000);
 
-    var world = this;
-
-    this.driver.wait(until.titleIs('Your eBay Shopping Cart'), 1000);
-
-    this.driver.findElements(By.className('imganchor')).then(async function (elements) {
-        for (var i = 0; i < elements.length; i++) {
-            var link = await elements[i].getAttribute('href');
-            var pieces = link.toString().split('/');
-            var itemWithQuery = pieces[pieces.length-1].split('?');
-            var item = itemWithQuery[0];
-            assert(world.itemList.indexOf(item) > -1, "Unexpected " + item + " found!  Valid values are: " + world.itemList.join(" "));
-        }
-
-        world.driver.close();
-
-        callback();
-    });
-
-
+    var elements = await this.driver.findElements(By.className('imganchor'));
+    for (var i = 0; i < elements.length; i++) {
+        var link = await elements[i].getAttribute('href');
+        var pieces = link.toString().split('/');
+        var itemWithQuery = pieces[pieces.length-1].split('?');
+        var item = itemWithQuery[0];
+        assert(this.itemList.indexOf(item) > -1, "Unexpected " + item + " found!  Valid values are: " + this.itemList.join(" "));
+    }
+    await this.driver.close();
 });

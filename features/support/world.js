@@ -9,20 +9,20 @@ var {setDefaultTimeout} = require('cucumber');
 function CustomWorld() {
     this.driver = null;
 
-    this.ie = new seleniumWebdriver.Builder()
-        .withCapabilities(seleniumWebdriver.Capabilities.ie())
-        .build();
+    // this.ie = new seleniumWebdriver.Builder()
+    //     .withCapabilities(seleniumWebdriver.Capabilities.ie())
+    //     .build();
+    //
+    // // Returns a promise that resolves to the element
+    // this.waitForElement = function(locator) {
+    //     var condition = seleniumWebdriver.until.elementLocated(locator);
+    //     return this.ie.wait(condition)
+    // }
 
     this.chrome = new seleniumWebdriver.Builder()
         .withCapabilities(seleniumWebdriver.Capabilities.chrome())
         .build();
 
-    // Returns a promise that resolves to the element
-    this.waitForElement = function(locator) {
-        var condition = seleniumWebdriver.until.elementLocated(locator);
-        return this.ie.wait(condition)
-    }
-    // Returns a promise that resolves to the element
     this.waitForElement = function(locator) {
         var condition = seleniumWebdriver.until.elementLocated(locator);
         return this.chrome.wait(condition)
