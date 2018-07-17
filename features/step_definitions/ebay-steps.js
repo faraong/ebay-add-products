@@ -4,6 +4,12 @@ var url = require('url');
 var assert = require('assert');
 
 Given(/^I have opened the Ebay site in "([^"]*)"$/, {timeout: 200 * 1000}, function(browser, callback) {
+
+    if (browser == 'IE') {
+        this.driver = this.ie;
+    } else {
+        this.driver = this.chrome;
+    }
     this.driver.get('https://www.ebay.com.au/').then( () => {
        callback();
     });
