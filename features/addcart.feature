@@ -7,13 +7,13 @@ Feature: Ebay End to End Testing
   and validate the shopping cart
 
   Scenario: Add products to Ebay cart
-    Given I have opened the Ebay site
-    When I search Ebay for "junior chef book old no cover"
-    Then I can select the product
-    Then I can add product to a shopping cart
-    Then product has been added to the cart and close popup
-    Then I search Ebay for "mini yellow paper bag"
-    Then I can select the product
-    Then I can add product to a shopping cart
+    Given I have opened the Ebay site in "Chrome"
+    When I can search Ebay for a product "superhero cutter"
+    Then I can select a random product from the list
+    Then I can add the selected product to a shopping cart
+    Then product has been added to the cart and go back to search
+    Then I can search Ebay for a product "mini yellow paper bag"
+    Then I can select a random product from the list
+    Then I can add the selected product to a shopping cart
     Then product has been added to the cart and go to checkout
-    Then validate the prices
+    Then validate the added products are on the cart

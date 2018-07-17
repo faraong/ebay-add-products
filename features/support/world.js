@@ -4,10 +4,6 @@ var chrome = require('selenium-webdriver/chrome');
 var path = require('chromedriver').path
 var {setDefaultTimeout} = require('cucumber');
 
-// var cartSubTotal = 0;
-// var shippingTotal = 0;
-// var itemList = [];
-
 function CustomWorld() {
     this.driver = new seleniumWebdriver.Builder()
         .withCapabilities(seleniumWebdriver.Capabilities.chrome())
@@ -18,6 +14,8 @@ function CustomWorld() {
         var condition = seleniumWebdriver.until.elementLocated(locator);
         return this.driver.wait(condition)
     }
+
+    this.itemList = [];
 }
 
 setWorldConstructor(CustomWorld);
