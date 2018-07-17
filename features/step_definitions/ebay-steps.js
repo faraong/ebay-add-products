@@ -62,7 +62,7 @@ Then(/^product has been added to the cart and go to checkout$/, {timeout: 60 * 1
 });
 
 Then(/^validate the added products are on the cart$/, async function () {
-    await this.driver.wait(until.titleIs('Your eBay Shopping Cart'), 1000);
+    await this.driver.wait(until.titleIs('Your eBay Shopping Cart'), 5000);
 
     var elements = await this.driver.findElements(By.className('imganchor'));
     for (var i = 0; i < elements.length; i++) {

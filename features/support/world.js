@@ -9,8 +9,13 @@ var {setDefaultTimeout} = require('cucumber');
 function CustomWorld() {
     this.driver = null;
 
+    // START: IE Configuration
+    // var ieCapabilities = seleniumWebdriver.Capabilities.ie();
+    // ieCapabilities.set('ignoreProtectedModeSettings', true);
+    // ieCapabilities.set('ie.ensureCleanSession', true);
+    // ieCapabilities.set('ie.browserCommandLineSwitches', '-private');
     // this.ie = new seleniumWebdriver.Builder()
-    //     .withCapabilities(seleniumWebdriver.Capabilities.ie())
+    //     .withCapabilities(ieCapabilities)
     //     .build();
     //
     // // Returns a promise that resolves to the element
@@ -18,7 +23,9 @@ function CustomWorld() {
     //     var condition = seleniumWebdriver.until.elementLocated(locator);
     //     return this.ie.wait(condition)
     // }
+    // END: IE Configuration
 
+    // START: Chrome Configuration
     var options = new chrome.Options();
 
     // option to disable image - not in use due to missing X after adding product to cart
@@ -34,6 +41,7 @@ function CustomWorld() {
         var condition = seleniumWebdriver.until.elementLocated(locator);
         return this.chrome.wait(condition)
     }
+    // END: Chrome Configuration
 
     this.itemList = [];
 }
