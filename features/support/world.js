@@ -19,8 +19,15 @@ function CustomWorld() {
     //     return this.ie.wait(condition)
     // }
 
+    var options = new chrome.Options();
+
+    // option to disable image - not in use due to missing X after adding product to cart
+    // options.setUserPreferences({'profile.default_content_setting_values.notifications': 2});
+
+    options.addArguments('--incognito');
+
     this.chrome = new seleniumWebdriver.Builder()
-        .withCapabilities(seleniumWebdriver.Capabilities.chrome())
+        .withCapabilities(options.toCapabilities())
         .build();
 
     this.waitForElement = function(locator) {
