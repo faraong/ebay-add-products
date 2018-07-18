@@ -13,3 +13,4 @@ To be able to search 2 products in Ebay and add it to the cart using Google Chro
 * Use node version 8.x
 * Install the necessary modules using `npm install`
 * Run cucumber tests using `npm test`
+  * To run in Windows use "npm run-script test-single" but it won't do parallel testing

@@ -5,7 +5,7 @@
   "scripts": {
     "test": "cucumber-js --parallel 2 -f json:report/cucumber_report.json && node index.js",
     "test-parallel": "cucumber-js --parallel 2",
-    "test-single": "cucumber-js",
+    "test-single": "cucumber-js -f json:report/cucumber_report.json && node index.js",
     "create-report": "node index.js"
   },
   "dependencies": {
