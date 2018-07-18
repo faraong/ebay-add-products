@@ -1,4 +1,6 @@
-# EBay add products to cart
+# Ebay add products to cart
+
+To be able to search 2 products in Ebay and add it to the cart using Internet Explorer and Google Chrome
 
 ## Running Test
 

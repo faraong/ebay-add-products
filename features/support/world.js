@@ -1,29 +1,28 @@
 var {setWorldConstructor, setDefaultTimeout} = require('cucumber');
 var seleniumWebdriver = require('selenium-webdriver');
 var chrome = require('selenium-webdriver/chrome');
-var ie = require('selenium-webdriver/ie');
+var firefox = require('selenium-webdriver/firefox');
 var chromepath = require('chromedriver').path;
-var iepath = require('iedriver').path;
+var firefoxpath = require('geckodriver').path;
 var {setDefaultTimeout} = require('cucumber');
 
 function CustomWorld() {
     this.driver = null;
 
-    // START: IE Configuration
-    // var ieCapabilities = seleniumWebdriver.Capabilities.ie();
-    // ieCapabilities.set('ignoreProtectedModeSettings', true);
-    // ieCapabilities.set('ie.ensureCleanSession', true);
-    // ieCapabilities.set('ie.browserCommandLineSwitches', '-private');
-    // this.ie = new seleniumWebdriver.Builder()
-    //     .withCapabilities(ieCapabilities)
-    //     .build();
-    //
-    // // Returns a promise that resolves to the element
-    // this.waitForElement = function(locator) {
-    //     var condition = seleniumWebdriver.until.elementLocated(locator);
-    //     return this.ie.wait(condition)
-    // }
-    // END: IE Configuration
+    // START: Firefox Configuration
+    var firefoxOptions = new firefox.Options();
+    firefoxOptions.addArguments('-private');
+
+    this.firefox = new seleniumWebdriver.Builder()
+        .withCapabilities(firefoxOptions.toCapabilities())
+        .build();
+
+    // Returns a promise that resolves to the element
+    this.waitForElement = function(locator) {
+        var condition = seleniumWebdriver.until.elementLocated(locator);
+        return this.firefox.wait(condition)
+    }
+    // END: Firefox Configuration
 
     // START: Chrome Configuration
     var options = new chrome.Options();
