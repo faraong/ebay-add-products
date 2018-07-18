@@ -6,16 +6,18 @@ var assert = require('assert');
 Given(/^I have opened the Ebay site in "([^"]*)"$/, {timeout: 200 * 1000}, async function(browser) {
     console.log('Opening the Ebay site');
 
-    if (browser == 'FireFox') {
-        this.driver = this.firefox;
+    if (browser === 'FireFox') {
+        this.driver = await this.firefox();
     } else {
-        this.driver = this.chrome;
+        this.driver = await this.chrome();
     }
+
     await this.driver.get('https://www.ebay.com.au/');
 });
 
 When(/^I can search Ebay for a product "([^"]*)"$/, {timeout: 100 * 1000}, async function(searchQuery) {
-    console.log('Searching for the product');
+    // console.log('Searching for the product');
+
     var query = await this.driver.wait(until.elementLocated(By.id('gh-ac')));
     await query.sendKeys(searchQuery, Key.ENTER);
     await this.driver.wait(until.titleIs(searchQuery + " | eBay"), 5000);
@@ -23,17 +25,19 @@ When(/^I can search Ebay for a product "([^"]*)"$/, {timeout: 100 * 1000}, async
 
 
 Then(/^I can select a random product from the list$/, async function () {
-    console.log('Selecting a product');
+    // console.log('Selecting a product');
+
+    // give it time to load
+    await this.driver.sleep(1000);
 
     var elements = await this.driver.findElements(By.className("s-item__link"));
     var rnd = Math.floor(Math.random() * (elements.length - 1));
     await elements[rnd].click();
-    // elements[rnd].click();
     await this.driver.wait(until.titleContains('| eBay'));
 });
 
 Then(/^I can add the selected product to a shopping cart$/, async function () {
-    console.log("Adding Product to a shopping cart");
+    // console.log("Adding Product to a shopping cart");
 
     // Get the item for comparison with the final value
     var urlValue = await this.driver.getCurrentUrl();
@@ -51,7 +55,8 @@ Then(/^I can add the selected product to a shopping cart$/, async function () {
 });
 
 Then(/^product has been added to the cart and go back to search$/, {timeout: 60 * 1000}, async function () {
-    console.log("Continue search");
+    // console.log("Continue search");
+
     const element = By.className('clzBtn');
     await this.driver.wait(until.elementLocated(element));
     var button = await this.driver.findElement(element);
@@ -59,7 +64,7 @@ Then(/^product has been added to the cart and go back to search$/, {timeout: 60 
 });
 
 Then(/^product has been added to the cart and go to checkout$/, {timeout: 60 * 1000}, async function () {
-    console.log("Checking products in the cart");
+    // console.log("Checking products in the cart");
     const element = By.xpath("//a[contains(@class, 'btn btn-scnd vi-VR-btnWdth-XL')]");
     await this.driver.wait(until.elementLocated(element));
     var button = await this.driver.findElement(element);

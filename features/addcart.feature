@@ -18,7 +18,6 @@ Feature: Ebay End to End Testing
     Then product has been added to the cart and go to checkout
     Then validate the added products are on the cart
 
-#  @addCart
 #  Scenario Outline: Add products to Ebay cart
 #    Given I have opened the Ebay site in "<browser>"
 #    When I can search Ebay for a product "superhero cutter"

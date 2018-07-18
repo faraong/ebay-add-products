@@ -2,26 +2,24 @@ var {setWorldConstructor, setDefaultTimeout} = require('cucumber');
 var seleniumWebdriver = require('selenium-webdriver');
 var chrome = require('selenium-webdriver/chrome');
 var firefox = require('selenium-webdriver/firefox');
-var chromepath = require('chromedriver').path;
-var firefoxpath = require('geckodriver').path;
-var {setDefaultTimeout} = require('cucumber');
+
+// add drivers to path
+require('chromedriver').path;
+require('geckodriver').path;
 
 function CustomWorld() {
+
     this.driver = null;
 
     // START: Firefox Configuration
     var firefoxOptions = new firefox.Options();
     firefoxOptions.addArguments('-private');
 
-    this.firefox = new seleniumWebdriver.Builder()
-        .withCapabilities(firefoxOptions.toCapabilities())
-        .build();
-
-    // Returns a promise that resolves to the element
-    this.waitForElement = function(locator) {
-        var condition = seleniumWebdriver.until.elementLocated(locator);
-        return this.firefox.wait(condition)
-    }
+    this.firefox = function() {
+        return new seleniumWebdriver.Builder()
+            .withCapabilities(firefoxOptions.toCapabilities())
+            .build();
+    };
     // END: Firefox Configuration
 
     // START: Chrome Configuration
@@ -32,14 +30,11 @@ function CustomWorld() {
 
     options.addArguments('--incognito');
 
-    this.chrome = new seleniumWebdriver.Builder()
-        .withCapabilities(options.toCapabilities())
-        .build();
-
-    this.waitForElement = function(locator) {
-        var condition = seleniumWebdriver.until.elementLocated(locator);
-        return this.chrome.wait(condition)
-    }
+    this.chrome = function () {
+        return new seleniumWebdriver.Builder()
+            .withCapabilities(options.toCapabilities())
+            .build();
+    };
     // END: Chrome Configuration
 
     this.itemList = [];
