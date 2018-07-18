@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "EBay webpage testing",
   "scripts": {
-    "test": "cucumber-js",
-    "test-parallel": "cucumber-js --parallel 2"
+    "test": "cucumber-js --parallel 2 -f json:report/cucumber_report.json && node index.js",
+    "test-parallel": "cucumber-js --parallel 2",
+    "test-single": "cucumber-js",
+    "create-report": "node index.js"
   },
   "dependencies": {
     "chai": "^4.1.1",

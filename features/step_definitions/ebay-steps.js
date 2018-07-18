@@ -4,7 +4,7 @@ var url = require('url');
 var assert = require('assert');
 
 Given(/^I have opened the Ebay site in "([^"]*)"$/, {timeout: 200 * 1000}, async function(browser) {
-    console.log('Opening the Ebay site');
+    //console.log('Opening the Ebay site');
 
     if (browser === 'FireFox') {
         this.driver = await this.firefox();
@@ -59,6 +59,10 @@ Then(/^product has been added to the cart and go back to search$/, {timeout: 60 
 
     const element = By.className('clzBtn');
     await this.driver.wait(until.elementLocated(element));
+
+    // Give it a bit of time to complete rendering
+    await this.driver.sleep(1000);
+
     var button = await this.driver.findElement(element);
     await button.click();
 });

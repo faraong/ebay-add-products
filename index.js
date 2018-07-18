@@ -9,7 +9,7 @@ var options = {
     name: "Ebay Add Cart Test",
     metadata: {
         "App Version":"1.0.0",
-        "Platform": "Windows 7",
+        "Platform": "MacOS",
         "Parallel": "Scenarios",
         "Executed": "Remote"
     }
